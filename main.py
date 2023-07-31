@@ -8,20 +8,16 @@ import requests
 from bs4 import BeautifulSoup
 import time
 import os
+import sys
 import subprocess
-
-def on_ainvitirus_checkbox_changed():
-    if ainvitirus_var.get() == 1:
-        smalloffice_var.set(0)
-
-def on_smalloffice_checkbox_changed():
-    if smalloffice_var.get() == 1:
-        ainvitirus_var.set(0)
+import ssl
+import certifi
+import psutil
 
 def Chrome(caminho_saida):
     # Baixa o instalador do Chrome usando wget
-    url = 'https://github.com/Bot016/imagesserver/raw/main/ChromeSetup.exe'
-    filename = 'ChromeSetup.exe'
+    url = 'https://raw.githubusercontent.com/Bot016/AppFetch/main/files/ChromeSetup.exe'
+    filename = 'Chrome-installer.exe'
     caminho_arquivo = os.path.join(caminho_saida, filename)
     if url:
         wget.download(url, out=caminho_arquivo)
@@ -114,7 +110,7 @@ def Anydesk(caminho_saida):
 def Java(caminho_saida):
 
     # Baixa o instalador usando uma emulação do navegador para conseguir o codigo html
-    filename = 'Java-8-installer.exe'
+    filename = 'Java-installer.exe'
     caminho_arquivo = os.path.join(caminho_saida, filename)
     # Configurar as opções do navegador Microsoft Edge
     edge_options = Options()
@@ -145,11 +141,27 @@ def Java(caminho_saida):
     else:
         return 'Não Instalado'
 
-def Kasperskiainvitirus(caminho_saida):
-    print("a")
+def Kasperskiantivirus(caminho_saida):
+    # Baixa o instalador do Kasperski usando wget
+    url = 'https://raw.githubusercontent.com/Bot016/AppFetch/main/files/Ainvirus-Kasperski.exe'
+    filename = 'Antivirus-installer.exe'
+    caminho_arquivo = os.path.join(caminho_saida, filename)
+    if url:
+        wget.download(url, out=caminho_arquivo)
+        return('Instalado')
+    else:
+        return('Não Instalado')
 
 def Kasperskisallofiice(caminho_saida):
-    print("a")
+    # Baixa o instalador do Kasperski usando wget
+    url = 'https://raw.githubusercontent.com/Bot016/AppFetch/main/files/smalloffice.exe'
+    filename = 'smalloffice-installer.exe'
+    caminho_arquivo = os.path.join(caminho_saida, filename)
+    if url:
+        wget.download(url, out=caminho_arquivo)
+        return('Instalado')
+    else:
+        return('Não Instalado')
 
 def baixar_selecionar_pasta():
     instalado_label.config(text=" ", fg="white") 
@@ -167,70 +179,24 @@ def baixar_aplicativos(caminho_saida):
     janela.update()
     instalado_label.config(text="Baixando...", fg="yellow") 
     janela.update()
-    if chrome_var.get() == 1:
-        install = Chrome(caminho_saida)
-        if install == 'Não instalado':  
-            instalado_label.config(text="Google Chrome Não baixado!", fg="red")
-            janela.update()
-        else:
-            instalado_label.config(text="Google Chrome baixado!", fg="green")
-            janela.update()
-    if zip_var.get() == 1:
-        install = D7zip(caminho_saida)
-        if install == 'Não instalado':  
-            instalado_label.config(text="7zip Não baixado!", fg="red")
-            janela.update()
-        else:
-            instalado_label.config(text="7zip baixado!", fg="green")
-            janela.update()
-    if firefox_var.get() == 1:
-        install =Firefox(caminho_saida)
-        if install == 'Não instalado':  
-            instalado_label.config(text="Firefox Não baixado!", fg="red")
-            janela.update()
-        else:
-            instalado_label.config(text="Firefox baixado!", fg="green")
-            janela.update()
-    if thunder_var.get() == 1:
-        install=Thunderbird(caminho_saida)
-        if install == 'Não instalado':  
-            instalado_label.config(text="Thunderbird Não baixado!", fg="red")
-            janela.update()
-        else:
-            instalado_label.config(text="Thunderbird baixado!", fg="green") 
-            janela.update()       
-    if CCleaner_var.get() == 1:
-        install = CCleaner(caminho_saida)
-        if install == 'Não instalado':  
-            instalado_label.config(text="CCleaner Não baixado!", fg="red")
-            janela.update()
-        else:
-            instalado_label.config(text="CCleaner baixado!", fg="green")
-            janela.update()
-    if winrar_var.get() == 1:
-        install = Winrar(caminho_saida)
-        if install == 'Não instalado':  
-            instalado_label.config(text="Winrar Não baixado!", fg="red")
-            janela.update()
-        else:
-            instalado_label.config(text="Winrar baixado!", fg="green")  
-            janela.update()      
-    if Anydesk_var.get() == 1:
-        install = Anydesk(caminho_saida)
-        if install == 'Não instalado':  
-            instalado_label.config(text="Anydesk Não baixado!", fg="red")
-            janela.update()
-        else:
-            instalado_label.config(text="Anydesk baixado!", fg="green")
-            janela.update()    
-    if java_var.get() == 1:
-        install = Java(caminho_saida)
-        if install == 'Não instalado':  
-            instalado_label.config(text="Java Não baixado!", fg="red")
-            janela.update()
-        else:
-            instalado_label.config(text="Java baixado!", fg="green")
-            janela.update()
+
+    global nomes
+    global variaveis_botao
+    nomes = ["Google Chrome","Firefox","7zip","Winrar","Thunderbird","CCleaner","Anydesk","Java","Kasperski Antivírus", "Kasperski Small Office"]
+    variaveis_botao = [chrome_var,firefox_var,zip_var,winrar_var,thunder_var,CCleaner_var,Anydesk_var,java_var, antivirus_var, smalloffice_var]
+    funcao = [Chrome,Firefox,D7zip,Winrar,Thunderbird,CCleaner,Anydesk,Java, Kasperskiantivirus, Kasperskisallofiice]
+    for nome, variaveis, funcao_D in zip(nomes, variaveis_botao, funcao):
+        if variaveis.get() == 1:
+            install = funcao_D(caminho_saida)
+            texto_nao = nome + " não baixado!"
+            texto_sim = nome + " baixado!"
+            if install == 'Não instalado':
+                instalado_label.config(text=texto_nao, fg="red")
+                janela.update()
+            else:
+                instalado_label.config(text=texto_sim, fg="green")
+                janela.update()
+
     time.sleep(1)
     instalado_label.config(text="Arquivos baixados!", fg="green") 
     janela.update()
@@ -241,60 +207,48 @@ def instalar_apks():
     instalado_label.config(text="Iniciando instalação...", fg="yellow")
     janela.update()
     time.sleep(1)
-    if chrome_var.get() == 1:
-        caminho_instalar = os.path.join(caminho_saida, 'ChromeSetup.exe')
-        subprocess.run(caminho_instalar, shell=True)
-        instalado_label.config(text="Google Chrome instalado!", fg="green")
-        janela.update()
-    if zip_var.get() == 1:
-        caminho_instalar = os.path.join(caminho_saida, '7zip-installer.exe')
-        subprocess.run(caminho_instalar, shell=True) 
-        instalado_label.config(text="7zip instalado!", fg="green")
-        janela.update()       
-    if firefox_var.get() == 1:
-        caminho_instalar = os.path.join(caminho_saida, 'Firefox-installer.exe')
-        subprocess.run(caminho_instalar, shell=True) 
-        instalado_label.config(text="Firefox instalado!", fg="green")
-        janela.update()      
-    if thunder_var.get() == 1:
-        caminho_instalar = os.path.join(caminho_saida, 'Thunderbird-installer.exe')
-        subprocess.run(caminho_instalar, shell=True)
-        instalado_label.config(text="Thunderbird instalado!", fg="green")
-        janela.update()
-    if CCleaner_var.get() == 1:
-        caminho_instalar = os.path.join(caminho_saida, 'CCleaner-installer.exe')
-        subprocess.run(caminho_instalar, shell=True)
-        instalado_label.config(text="Ccleaner instalado!", fg="green")
-        janela.update()
-    if winrar_var.get() == 1:
-        caminho_instalar = os.path.join(caminho_saida, 'Winrar-installer.exe')
-        subprocess.run(caminho_instalar, shell=True)
-        instalado_label.config(text="Winrar instalado!", fg="green")
-        janela.update()
-    if Anydesk_var.get() == 1:
-        caminho_instalar = os.path.join(caminho_saida, 'Anydesk-installer.exe')
-        subprocess.run(caminho_instalar, shell=True)
-        instalado_label.config(text="Anydesk instalado!", fg="green")
-        janela.update()
-    if java_var.get() == 1:
-        caminho_instalar = os.path.join(caminho_saida, 'Java-8-installer.exe')
-        subprocess.run(caminho_instalar, shell=True)
-        instalado_label.config(text="Java instalado!", fg="green")
-        janela.update()
+    
+    instalador = ['Chrome', 'Firefox', '7zip', 'Winrar', 'Thunderbird', 'CCleaner', 'Anydesk', 'Java', 'Antivirus', 'smalloffice']
+    for nome, variaveis, instaladores in zip(nomes, variaveis_botao, instalador):
+        if variaveis.get() == 1:
+            nome_instalador = instaladores + '-installer.exe'
+            caminho_instalar = os.path.join(caminho_saida, nome_instalador)
+            processo_instalador = subprocess.Popen(caminho_instalar, shell=True)
+            processo_instalador.wait()
+            if os.path.exists(caminho_instalar):
+                try:
+                    os.remove(caminho_instalar)
+                except PermissionError:
+                    pass
+
+            texto_instalador = nome + ' instalado!'
+            instalado_label.config(text=texto_instalador, fg="green")
+            janela.update()
     time.sleep(1)
     instalado_label.config(text="Instalação Concluída!", fg="green")
     janela.update()
     time.sleep(1)
     janela.destroy()
 
+def on_antivirus_checkbox_changed():
+    if antivirus_var.get() == 1:
+        smalloffice_var.set(0)
+
+def on_smalloffice_checkbox_changed():
+    if smalloffice_var.get() == 1:
+        antivirus_var.set(0)
+
+# Desabilita o SLL das paginas
+ssl._create_default_https_context = ssl._create_unverified_context
+
 # Procura o icone no EXE   
-#root_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
-#icon_path = os.path.join(root_path, "icon.ico")
+root_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+icon_path = os.path.join(root_path, "icon.ico")
 
 #Cria a janela principal
 janela = tk.Tk()
 janela.title("AppFetch")
-#janela.iconbitmap(icon_path)
+janela.iconbitmap(icon_path)
 janela.geometry("320x463")
 janela.resizable(False, False)
 janela.configure(bg="#242424")
@@ -378,9 +332,9 @@ antivirus_frame.pack(pady=5)
 antivirus_label = tk.Label(antivirus_frame, text="KASPERSKI", font=("Bahnschrift", 13), bg="#242424", fg="white")
 antivirus_label.pack(anchor='center')
 
-ainvitirus_var = tk.IntVar()
-ainvitirus_checkbox = ttk.Checkbutton(antivirus_frame, text="Aintivírus", variable=ainvitirus_var, style='Custom.TCheckbutton', takefocus=False, command=on_ainvitirus_checkbox_changed)
-ainvitirus_checkbox.pack(side=tk.LEFT, padx=5)
+antivirus_var = tk.IntVar()
+antivirus_checkbox = ttk.Checkbutton(antivirus_frame, text="Aintivírus", variable=antivirus_var, style='Custom.TCheckbutton', takefocus=False, command=on_antivirus_checkbox_changed)
+antivirus_checkbox.pack(side=tk.LEFT, padx=5)
 
 smalloffice_var = tk.IntVar()
 smalloffice_checkbox = ttk.Checkbutton(antivirus_frame, text="Small Officce", variable=smalloffice_var, style='Custom.TCheckbutton', takefocus=False, command=on_smalloffice_checkbox_changed)
