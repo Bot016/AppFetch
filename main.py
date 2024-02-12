@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, filedialog
+from tkinter import ttk
 
 from downloader import Download
 
@@ -92,18 +92,11 @@ class MainFrame:
         self.apks["Antivírus"].config(command=self.on_antivirus_checkbox_changed)
         self.apks["Small Office"].config(command=self.on_smalloffice_checkbox_changed)
 
-    def selectOutputFolder(self):
-        #instalado_label.config(text=" ", fg="white") 
-        self.window.geometry("320x463")
-        self.window.update()
-        output_folder = filedialog.askdirectory()
-        if output_folder:
-            Download(self.apks_var, output_folder)
-        else:
-            return
-
+    def download_button_callback(self):
+        Download(self.apks_var,self.window)
+        
     def button(self):
-        self.DownloadButton = ttk.Button(self.window, text="BAIXAR APLICATIVOS", style="Custom.TButton", command=self.selectOutputFolder, takefocus=False)
+        self.DownloadButton = ttk.Button(self.window, text="BAIXAR APLICATIVOS", style="Custom.TButton", command=self.download_button_callback, takefocus=False)
         self.DownloadButton.pack(anchor="center", pady=10)
 
         self.instalando_label = tk.Label(self.window, text=" ", font=("Bahnschrift", 12), bg="#242424", fg="white")
