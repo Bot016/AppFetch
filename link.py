@@ -1,5 +1,9 @@
+import time
 import requests
 from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.edge.options import Options
+from selenium.webdriver.edge.service import Service as EdgeService
 
 def response_get_html(url):
         response = requests.get(url)
@@ -21,7 +25,7 @@ class links():
                 final_version.sort(key=lambda link: int(''.join(filter(str.isdigit, link['href'].split('/')[-2]))), reverse=True)
                 latest_version = final_version[0]
                 latest_version = latest_version['href']
-                url = '/'.join(url.split('/', 3)[:3]) + latest_version + "win32/pt-PT/Firefox%20Installer.exe"
+                url = '/'.join(url.split('/', 3)[:3]) + latest_version + "win32/pt-PT/Firefox Installer.exe"
                 return url
               
     def zip():
@@ -61,9 +65,29 @@ class links():
         return url
 
     def CCleaner():
-        print("CClenare")
+        url = 'https://bits.avcdn.net/productfamily_CCLEANER/insttype_FREE/platform_WIN_PIR/installertype_ONLINE/build_RELEASE/'
+        return url
     
     def Java_8():
-        print("Java_8")
+        url = "https://www.java.com/pt-BR/download/manual.jsp"
 
-links.Antivírus()
+        edge_options = Options()
+        edge_options.use_chromium = True
+        edge_options.add_argument('--enable-javascript')
+        edge_options.add_argument('--headless')
+        edge_options.add_argument('--log-level=3')
+        edge_options.add_argument('--disable-dev-shm-usage')
+        edge_options.add_argument('--remote-debugging-port=0')
+        edge_options.add_experimental_option('excludeSwitches', ['enable-logging'])
+
+        driver = webdriver.Edge(options=edge_options)
+        driver.get(url)
+        time.sleep(5)
+        html = driver.page_source
+        driver.quit()
+
+        html = BeautifulSoup(html, 'html.parser')
+        if html:
+            link = html.find_all('a', title="Fazer download do software Java para Windows On-line")
+            url = link[0].get('href')
+            return url

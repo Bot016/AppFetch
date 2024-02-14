@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+import ssl
 
 from downloader import Download
 
@@ -8,6 +9,8 @@ class MainFrame:
 
     def __init__(self):
         self.window = tk.Tk()
+        # Disable SSL
+        ssl._create_default_https_context = ssl._create_unverified_context
         self.config()
         self.frames()
         self.styles()
