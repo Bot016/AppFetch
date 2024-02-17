@@ -6,6 +6,7 @@ from selenium.webdriver.edge.options import Options
 from selenium.webdriver.edge.service import Service as EdgeService
 
 def response_get_html(url):
+        # Function to send an HTTP GET request to the given URL and return the parsed HTML
         response = requests.get(url)
         if response.status_code == 200:
             html = BeautifulSoup(response.content, 'html.parser')
@@ -13,7 +14,8 @@ def response_get_html(url):
 
 class links():
     def Chrome():
-        return "https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7BE5E20456-3691-AB08-C7F9-DDF68794A713%7D%26lang%3Dpt-BR%26browser%3D5%26usagestats%3D1%26appname%3DGoogle%2520Chrome%26needsadmin%3Dprefers%26ap%3Dx64-stable-statsdef_1%26installdataindex%3Dempty/update2/installers/ChromeSetup.exe"
+        url = "https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7BE5E20456-3691-AB08-C7F9-DDF68794A713%7D%26lang%3Dpt-BR%26browser%3D5%26usagestats%3D1%26appname%3DGoogle%2520Chrome%26needsadmin%3Dprefers%26ap%3Dx64-stable-statsdef_1%26installdataindex%3Dempty/update2/installers/ChromeSetup.exe"
+        return url
     
     def Firefox():
         url = "https://download-installer.cdn.mozilla.net/pub/firefox/releases/"
