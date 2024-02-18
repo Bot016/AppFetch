@@ -89,7 +89,11 @@ class links():
         driver.quit()
 
         html = BeautifulSoup(html, 'html.parser')
-        if html:
-            link = html.find_all('a', title="Fazer download do software Java para Windows On-line")
-            url = link[0].get('href')
-            return url
+        try: 
+            if html:
+                link = html.find_all('a', title="Fazer download do software Java para Windows On-line")
+                url = link[0].get('href')
+                return url
+        except:
+            # Return random link
+            return "https://nolink.com.zz"
