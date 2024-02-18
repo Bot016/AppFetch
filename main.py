@@ -1,7 +1,9 @@
 import ssl
+import threading
 import tkinter as tk
 from tkinter import ttk
 
+# Import class
 from downloader import Download
 from image import MainImage
 
@@ -105,8 +107,9 @@ class MainFrame:
         self.apks["Small Office"].config(command=self.on_smalloffice_checkbox_changed)
 
     def download_button_callback(self):
-        #'download' Keep a reference to prevent garbage collection
-        download = Download(self.apks_var,self.window, self.progress_bar_main, self.apks, self.download_button, self.instalando_label)
+        # Start download using Thread
+        thread = threading.Thread(target=Download, args=(self.apks_var,self.window, self.progress_bar_main, self.apks, self.download_button, self.instalando_label))
+        thread.start()
     
     def image_window(self, event=None):
         #'image' Keep a reference to prevent garbage collection
