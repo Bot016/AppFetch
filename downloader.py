@@ -1,8 +1,10 @@
 import os
 import wget
 import tkinter as tk
-from link import links
 from tkinter import filedialog
+
+# Import Class
+from link import links
 
 class Download:
 
