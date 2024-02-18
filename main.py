@@ -54,13 +54,16 @@ class MainFrame:
     def styles(self):
         # Configure styles
         self.style = ttk.Style()
-        self.style.configure('Custom.TCheckbutton', background=self.default_color, foreground='white', selectcolor=self.default_color, activebackground=self.default_color, highlightthickness=0, activeforeground='white', font=("Bahnschrift", 10))
+        self.style.configure('TCheckbutton', background=self.default_color, foreground='white', selectcolor=self.default_color, activebackground=self.default_color, highlightthickness=0, activeforeground='white', font=("Bahnschrift", 10))
 
         self.style = ttk.Style()
         self.style.configure("Custom.TButton", font=("Bahnschrift", 10), foreground=self.default_color, background=self.default_color, padding=-1)
 
         self.style = ttk.Style()
-        self.style.configure("TCheckbutton", background=self.default_color, foreground='green', selectcolor=self.default_color, activebackground=self.default_color, highlightthickness=0, activeforeground='white', font=("Bahnschrift", 10))
+        self.style.configure("Green.TCheckbutton", foreground='green')
+
+        self.style = ttk.Style()
+        self.style.configure("Red.TCheckbutton", foreground='red')
     
     def on_antivirus_checkbox_changed(self):
         if self.apks_var["Antivírus"].get() == 1:
@@ -99,7 +102,7 @@ class MainFrame:
 
         for apk_name, frame_name in apk_frame_list:
             self.apks_var[apk_name] = tk.IntVar()
-            apk = ttk.Checkbutton(self.frames[frame_name], text=apk_name, variable=self.apks_var[apk_name], style='Custom.TCheckbutton', takefocus=False)
+            apk = ttk.Checkbutton(self.frames[frame_name], text=apk_name, variable=self.apks_var[apk_name], style='TCheckbutton', takefocus=False)
             self.apks[apk_name] = apk
             apk.pack(side=tk.LEFT, padx=5)
 

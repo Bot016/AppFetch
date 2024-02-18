@@ -34,7 +34,7 @@ class Download:
             progress_bar.config(variable=self.porcentagem)
             # If download again, back Labels to default color
             for i in self.apks:
-                self.apks[i].config(style="Custom.TCheckbutton")
+                self.apks[i].config(style="TCheckbutton")
             self.window.update()
 
             # Start find links and download
@@ -83,13 +83,18 @@ class Download:
         for i in range(len(self.apk_function)):
             self.porcentagem.set(0)
             output_folder = os.path.join(path_folder, self.apk_name[i] + ".exe")
-
-            # Download APK using wget and update progress bar
-            wget.download(self.apk_function[i], out=output_folder, bar=self.progress_bar)
+            try:
+                # Download APK using wget and update progress bar
+                wget.download(self.apk_function[i], out=output_folder, bar=self.progress_bar)
+                # Update the Checkbutton style if download archive
+                self.apks[self.apk_name[i]].config(style="Green.TCheckbutton")
+                self.window.update()
+            except:
+                # Update the Checkbutton style to red if archive don't download
+                self.apks[self.apk_name[i]].config(style="Red.TCheckbutton")
+                self.window.update()
             
-            # Update the Checkbutton style for the downloaded APK
-            self.apks[self.apk_name[i]].config(style="TCheckbutton")
-            self.window.update()
+            
         
     def progress_bar(self, current, total, width=80):
         progresso = current / total
